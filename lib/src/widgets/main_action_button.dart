@@ -45,7 +45,7 @@ class MainActionButton extends StatelessWidget {
                     animation: arrowAnimationController,
                     builder: (BuildContext context, Widget? child) {
                       return Transform.rotate(
-                        angle: (arrowAnimation.value * 2.0 * math.pi) as double,
+                        angle: (arrowAnimation.value * 0.25 * math.pi) as double,
                         child: child,
                       );
                     },

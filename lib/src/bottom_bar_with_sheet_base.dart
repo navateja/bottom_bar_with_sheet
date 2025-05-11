@@ -124,16 +124,34 @@ class _BottomBarWithSheetState extends State<BottomBarWithSheet>
             children: _generateItems(),
           ),
           _isOpened
-              ? Expanded(child: widget.sheetChild ?? SizedBox())
+              ? Expanded(
+                child: GestureDetector(
+                  onVerticalDragEnd: (details){
+                    if (details.primaryVelocity! > 100){
+                      widget._controller.closeSheet();
+                      if (_arrowAnimationController.isCompleted) {
+                        _arrowAnimationController.reverse();
+                      }
+                    }
+                  },
+                  child: widget.sheetChild ?? SizedBox())
+                )
               : SizedBox()
         ],
       ),
     );
   }
 
-  void _configBottomControllerListener() {
+   void _configBottomControllerListener() {
     _sub = widget._controller.stream
-        .listen((event) => setState(() => _isOpened = event));
+        .listen((event) {
+          setState(() => _isOpened = event);
+          if(!event && _arrowAnimationController.isCompleted){
+            _arrowAnimationController.reverse();
+          } else if (event && !_arrowAnimationController.isCompleted){
+            _arrowAnimationController.forward();
+          }
+        });
   }
 
   List<Widget> _generateItems() {
@@ -157,6 +175,7 @@ class _BottomBarWithSheetState extends State<BottomBarWithSheet>
                 index: i,
                 model: e,
                 controller: widget._controller,
+                autoClose: widget.autoClose,
                 theme: widget.bottomBarTheme,
               ),
             ),

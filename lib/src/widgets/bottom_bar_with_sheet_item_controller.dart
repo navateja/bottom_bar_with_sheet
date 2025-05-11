@@ -11,12 +11,14 @@ class BottmBarItemController extends StatefulWidget {
     required this.controller,
     required this.index,
     required this.theme,
+    required this.autoClose,
   }) : super(key: key);
 
   final int index;
   final BottomBarWithSheetItem model;
   final BottomBarWithSheetController controller;
   final BottomBarTheme theme;
+  final bool autoClose;
 
   @override
   _BottmBarItemControllerState createState() => _BottmBarItemControllerState();
@@ -48,7 +50,12 @@ class _BottmBarItemControllerState extends State<BottmBarItemController> {
         hoverColor: Colors.transparent,
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        onTap: () => widget.controller.selectItem(widget.index),
+        onTap: () {
+          widget.controller.selectItem(widget.index);
+          if (widget.autoClose) {
+            widget.controller.closeSheet();
+          }
+        },
         child: BottomBarWithSheetItemWidget(
           model: widget.model,
           theme: widget.theme,
